@@ -10,10 +10,11 @@ const Video = () => import('@/views/video')
 const User = () => import('@/views/user')
 const Profile = () => import('@/views/user/profile')
 const Chat = () => import('@/views/user/chat')
-const Login = () => import('@/views/logon')
+const Login = () => import('@/views/login')
 const Article = () => import('@/views/article')
 const Search = () => import('@/views/search')
 const SearchResult = () => import('@/views/search/result')
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -52,7 +53,7 @@ const routes = [
     component: Login
   },
   {
-    path: '/arctile',
+    path: '/article',
     component: Article
   },
   {

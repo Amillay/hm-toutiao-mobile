@@ -1,5 +1,7 @@
 <template>
-  <div>登录</div>
+  <div class="container">
+    <nav-nav-bar title="文章详情" left-arrow @click-left="$router.back()"></nav-nav-bar>
+  </div>
 </template>
 
 <script>

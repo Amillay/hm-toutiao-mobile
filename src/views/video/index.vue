@@ -1,5 +1,12 @@
 <template>
-  <div>视频</div>
+  <div>
+    <div class="split" ></div>
+    <van-skeleton title :row="3"></van-skeleton>
+    <div class="split" ></div>
+    <van-skeleton title :row="3"></van-skeleton>
+    <div class="split"></div>
+    <van-skeleton title :row="3"></van-skeleton>
+  </div>
 </template>
 
 <script>
