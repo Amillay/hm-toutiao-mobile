@@ -5,6 +5,9 @@ import store from './store'
 
 import Vant from 'vant'
 
+// 引入基准值实时改变  自动适配插件先进行下载安装
+import 'amfe-flexible'
+
 // 导入所有组件
 import 'vant/lib/index.css'
 Vue.use(Vant)
