@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
+import router from './permission'
+// import '@/permission' 或者也可以这样
 import store from './store'
 
 import Vant from 'vant'
