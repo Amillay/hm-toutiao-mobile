@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <nav-nav-bar title="登录" left-arrow @click-left="$router.back()"></nav-nav-bar>
+    <van-nav-bar title="登录" left-arrow @click-left="$router.back()"></van-nav-bar>
     <!-- 手机号和验证码登录按钮 -->
     <van-cell-group>
       <!-- required前面红点 -->
-      <van-field placeholder="请输入手机号" label="手机号" v-model="loginForm.mobile" :error-message="errMsg.mobile" @blur="chackMobile"></van-field>
+      <van-field placeholder="请输入手机号" label="手机号" v-model="loginForm.mobile" :error-message="errMsg.mobile" @blur="checkMobile"></van-field>
       <van-field placeholder="请输入验证码" label="密码" v-model="loginForm.code" :error-message="errMsg.code" @blur="checkCode">
         <!-- slot指定哪个填内容 -->
         <van-button type="primary" slot="button" size="small">发送验证码</van-button>
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { login } from '@/api/user'
+import { mapMutations } from 'vuex'
 export default {
   name: 'login',
   data () {
@@ -60,11 +62,22 @@ export default {
       return true
     },
     // 登录方法
-    login () {
+    async login () {
       if (this.checkMobile() && this.checkCode()) {
         // 满足规则发请求校验
+        const data = await login(this.loginForm) // 获取结果
+        // 拿到token更新
+        // this.$store.commit('',{})
+        this.updateUser({ user: data })
+        // 登录成功提示
+        this.$notice({ type: 'success', message: '登陆成功' })
+        // 跳转
+        // 两种1 redirectUrl(登录未遂) 2 没有redirectUrl  跳到首页
+        let { redirectUrl } = this.$route.query
+        this.$router.push(redirectUrl || '/')
       }
-    }
+    },
+    ...mapMutations(['updateUser'])// 映射 到方法中
   }
 }
 </script>

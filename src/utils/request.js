@@ -7,7 +7,7 @@ import store from '@/store'
 // 引入路由对象实例
 import router from '@/router'
 
-// axios.defaults是对axios本身进行改造   现在是创建了一个新的和原来的没有关系了
+// 是对axios本身进行改造   现在是创建了一个新的和原来的没有关系了
 // 创建新的插件实例
 // 给request默认请求头  baseURL
 const instance = axios.create({
@@ -45,6 +45,7 @@ instance.interceptors.response.use(function (response) {
 }, async function (error) {
   // 错误的时候token容易失效具有失效问题
 //   如何判断失效401状态码
+// error.response &&
   if (error.response && error.response.status === 401) {
     // 表示token过期
     // 获取当前页面地址  这里不能用this 组件实例
@@ -67,7 +68,7 @@ instance.interceptors.response.use(function (response) {
         //   result.data.data.token
       } catch (error) {
         // 错误就是不就措施没有用了refresh_token也进行失效了
-        store.commit('delUser')
+        store.commit('clearUser') // 清空信息
         router.push(toPath) // 跳转登录
       }
     } else {
@@ -75,7 +76,7 @@ instance.interceptors.response.use(function (response) {
       // 当访问页面是让你去登陆，登陆成功后  应该回到之前的页面
       // 记住当前地址回到之前页面
       // params 动态路由  user/:id   query 传参  user? id= 123
-
+      store.commit('clearUser') // 清空信息
       // router.currentRoute.path
       // push除了可以是字符串还可以是一个对象router.push({path:'/login',query:{}})
       router.push(toPath)
