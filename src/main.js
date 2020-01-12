@@ -10,7 +10,7 @@ import Vant from 'vant'
 import 'amfe-flexible'
 
 // 导入所有组件
-import 'vant/lib/index.css'
+import 'vant/lib/index.less'
 
 // 全局样式放在vant样式下面
 import '@/style/index.less'
