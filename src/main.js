@@ -4,7 +4,7 @@ import router from './permission'
 // import '@/permission' 或者也可以这样
 import store from './store'
 
-import Vant from 'vant'
+import Vant, { Lazyload } from 'vant'// 引入vant组件库 和lazyload
 
 import plugin from '@/utils/plugin'
 
@@ -20,6 +20,8 @@ import 'amfe-flexible'
 Vue.use(Vant)
 // 完成注册在任意位置就可以使用vant组件库的组件   按需引用没必要在开发阶段引入
 Vue.use(plugin)
+// 完成懒加载对象注册
+Vue.use(Lazyload)
 
 Vue.config.productionTip = false
 

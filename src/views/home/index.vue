@@ -9,32 +9,68 @@
       </van-cell-group>
     </div> -->
     <!-- 一个tab标签对应一个arctile-list组件 -->
-    <article-list :channel_id="channel.id"></article-list>
+    <!-- 监听子组件事件  应该在子组件的标签上写监听 -->
+    <article-list @showAction="openMoreAction" :channel_id="channel.id"></article-list>
+    <!-- <article-list :channel_id="channel.id"></article-list> -->
+
   </van-tab>
 </van-tabs>
 <span class="bar_btn"><van-icon  name="wap-nav" /></span>
+<!-- 放置弹层 -->
+<van-popup v-model="showMoreAction" :style="{width:'80%'}">
+  <more-action @dislike="dislike"></more-action>
+</van-popup>
   </div>
 </template>
 
 <script>
-import ArticleList from './components/article-list'
+import ArticleList from './components/article-list.vue'
 import { getMyChannels } from '@/api/channels'
+import MoreAction from './components/more-action'
+import { disLikeArticle } from '@/api/article.js'
+
+import eventBus from '@/utils/eventBus.js'
 export default {
   name: 'home',
   data () {
     return {
       activeIndex: 0, // 默认启用第0个标签
-      channels: [] // 接收频道的数据
+      channels: [], // 接收频道的数据
+      showMoreAction: false, // 控制显示反馈弹层
+      articleId: null
     }
   },
   components: {
-    ArticleList
+    ArticleList,
+    MoreAction
   },
   methods: {
     async getMyChannels () {
       // 获取频道列表
       let data = await getMyChannels()
       this.channels = data.channels
+    },
+    openMoreAction (artId) {
+      this.showMoreAction = true
+      this.articleId = artId
+    },
+    // 调用不喜欢的文章接口
+    async dislike () {
+      try {
+        await disLikeArticle({ target: this.articleId })
+        this.$notice({
+          type: 'success',
+          message: '操作成功'
+        })
+        // 文章id频道id
+        eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+        this.showMoreAction = false
+      } catch (error) {
+        this.$notice({
+          type: 'danger',
+          message: '操作失败'
+        })
+      }
     }
   },
   created () {
