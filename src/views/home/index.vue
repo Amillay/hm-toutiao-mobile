@@ -3,11 +3,13 @@
 <van-tabs swipeable v-model="activeIndex">
   <van-tab :title="'标签'+ item" v-for="item in 10" :key="item">
     <!-- 这个div设置了滚动条  后面做阅读记忆   阅读记忆：看文章看到一半  滑到中部去了别的页面，回来时文章还在之前停留的位置 -->
-    <div class="scroll-wrapper">
+    <!-- <div class="scroll-wrapper">
       <van-cell-group>
         <van-cell v-for="obj in 20" :key="obj" :title="item"></van-cell>
       </van-cell-group>
-    </div>
+    </div> -->
+    <!-- 一个tab标签对应一个arctile-list组件 -->
+    <article-list></article-list>
   </van-tab>
 </van-tabs>
 <span class="bar_btn"><van-icon  name="wap-nav" /></span>
@@ -15,12 +17,16 @@
 </template>
 
 <script>
+import ArticleList from './components/article-list'
 export default {
   name: 'home',
   data () {
     return {
       activeIndex: 0// 默认启用第0个标签
     }
+  },
+  components: {
+    ArticleList
   }
 }
 </script>
