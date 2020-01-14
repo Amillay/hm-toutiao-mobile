@@ -86,3 +86,4 @@ instance.interceptors.response.use(function (response) {
 })
 // 使用进行导出
 export default instance // 导出request工具
+// Date.now  拿到当前的时间戳  最新的-减去之前的时间戳除1000就是多少秒
