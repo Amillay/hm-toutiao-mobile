@@ -41,3 +41,23 @@ export function getAllChannels () {
     url: '/channels'
   })
 }
+
+// 本地化删除删除频道  封装本地化
+export function delChannel (id) {
+  return new Promise(function (resolve, reject) {
+    // 首先判断是删除游客频道还是登陆频道
+    let key = store.state.user.token ? CACHE_CHANNEL_U : CACHE_CHANNEL_T
+    let channels = JSON.parse(localStorage.getItem(key))
+    let index = channels.findIndex(item => item.id === id)
+    if (index > -1) {
+      // 删除数据
+      channels.splice(index, 1) // 直接删除原数组中数据第一种
+      // channels = channels.filter(item => item.id !== id) //新数组模式去删除要删除的数据  第二种方法
+      // 应该重新写入缓存
+      localStorage.setItem(key, JSON.stringify(channels))
+      resolve()
+    } else {
+      reject(new Error('找不到对应频道'))
+    }
+  })
+}
