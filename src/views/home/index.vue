@@ -18,18 +18,26 @@
 <span class="bar_btn"><van-icon  name="wap-nav" /></span>
 <!-- 放置弹层 -->
 <van-popup v-model="showMoreAction" :style="{width:'80%'}">
-  <more-action @dislike="dislike"></more-action>
+  <more-action @dislike="dislikeOrReport($event,'dislike')" @report="dislikeOrReport($event,report)"></more-action>
 </van-popup>
+<van-action-sheet title="编辑频道" v-model="showChannelEdit" :round="false">
+  <!-- 给谁传在谁的标签上写属性 -->
+  <channel-edit :channels="channels"></channel-edit>
+</van-action-sheet>
+
   </div>
 </template>
 
 <script>
 import ArticleList from './components/article-list.vue'
-import { getMyChannels } from '@/api/channels'
+import ChannelEdit from './components/channel-edit'
 import MoreAction from './components/more-action'
-import { disLikeArticle } from '@/api/article.js'
 
 import eventBus from '@/utils/eventBus.js'
+
+import { disLikeArticle, reportArticle } from '@/api/article.js'
+import { getMyChannels } from '@/api/channels'
+
 export default {
   name: 'home',
   data () {
@@ -37,12 +45,14 @@ export default {
       activeIndex: 0, // 默认启用第0个标签
       channels: [], // 接收频道的数据
       showMoreAction: false, // 控制显示反馈弹层
-      articleId: null
+      articleId: null,
+      showChannelEdit: false
     }
   },
   components: {
     ArticleList,
-    MoreAction
+    MoreAction,
+    ChannelEdit
   },
   methods: {
     async getMyChannels () {
@@ -54,15 +64,52 @@ export default {
       this.showMoreAction = true
       this.articleId = artId
     },
-    // 调用不喜欢的文章接口
-    async dislike () {
+
+    //   // 调用不喜欢的文章接口
+    //   async dislike () {
+    //     try {
+    //       await disLikeArticle({ target: this.articleId })
+    //       this.$notice({
+    //         type: 'success',
+    //         message: '操作成功'
+    //       })
+    //       // 文章id频道id
+    //       eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+    //       this.showMoreAction = false
+    //     } catch (error) {
+    //       this.$notice({
+    //         type: 'danger',
+    //         message: '操作失败'
+    //       })
+    //     }
+    //   },
+    //   // 调用举报文章接口
+    //  async report (type) {
+    //    await reportArticle({target: this.articleId, type})
+
+    //      this.$notice({
+    //         type: 'success',
+    //         message: '操作成功'
+    //       })
+    //       // 同样要删除文章
+    //       eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+    //       this.showMoreAction = false
+    //     } catch (error) {
+    //       this.$notice({
+    //         type: 'danger',
+    //         message: '操作失败'
+    //       })
+    //     }
+    //  },
+    /** 下面两个相同封装抽提 */
+    async dislikeOrReport (params, operateType) {
       try {
-        await disLikeArticle({ target: this.articleId })
+        operateType === 'dislike' ? await disLikeArticle({ target: this.articleId }) : await reportArticle({ target: this.articleId, params })
         this.$notice({
           type: 'success',
           message: '操作成功'
         })
-        // 文章id频道id
+        // 删除文章
         eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
         this.showMoreAction = false
       } catch (error) {
