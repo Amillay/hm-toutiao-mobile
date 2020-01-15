@@ -18,11 +18,12 @@
 <span class="bar_btn"><van-icon  name="wap-nav" /></span>
 <!-- 放置弹层 -->
 <van-popup v-model="showMoreAction" :style="{width:'80%'}">
-  <more-action @dislike="dislikeOrReport($event,'dislike')" @report="dislikeOrReport($event,report)"></more-action>
+  <more-action @dislike="dislikeOrReport($event,'dislike')" @report="dislikeOrReport($event,'report')"></more-action>
 </van-popup>
-<van-action-sheet title="编辑频道" v-model="showChannelEdit" :round="false">
+<van-action-sheet title="编辑频道" v-model="showChannelEdit" :round="false" >
+
   <!-- 给谁传在谁的标签上写属性 父组件监听选择频道事件 -->
-  <channel-edit :channels="channels" @selectChannel="selectChannel" :activeIndex="activeIndex"></channel-edit>
+  <channel-edit :channels="channels" @selectChannel="selectChannel" :activeIndex="activeIndex" @delChannel="delChannel" @addChannel="addChannel"></channel-edit>
 </van-action-sheet>
 
   </div>
@@ -35,7 +36,7 @@ import MoreAction from './components/more-action'
 
 import eventBus from '@/utils/eventBus.js'
 
-import { disLikeArticle, reportArticle } from '@/api/article.js'
+import { disLikeArticle, reportArticle, delChannel, addChannel } from '@/api/article.js'
 import { getMyChannels } from '@/api/channels'
 
 export default {
@@ -55,6 +56,24 @@ export default {
     ChannelEdit
   },
   methods: {
+    // 删除频道方法
+    async delChannel (id) {
+      try {
+        await delChannel(id) // 表示删除数据成功
+        // debugger
+        //  要移除自身data中channels数据
+        let index = this.channels.findIndex(item => item.id === id)
+        if (index <= this.activeIndex) {
+          // 判断一下激活的索引和现在要删除的索引之间的关系   在后面索引还是原来的  前面的或者本身删除才会改变
+          this.activeIndex = this.activeIndex - 1
+        }
+        if (index > -1) {
+          this.channels.splice(index, 1) // 移除当前频道
+        }
+      } catch (error) {
+        this.$notice({ type: 'danger', message: '删除错误' })
+      }
+    },
     async getMyChannels () {
       // 获取频道列表
       let data = await getMyChannels()
@@ -72,7 +91,11 @@ export default {
       //  关闭弹层
       this.showChannelEdit = false
     },
-
+    // 添加频道
+    async addChannel (channel) {
+      await addChannel(channel) // 完成写入本地缓存
+      this.channels.push(channel) // 修改data中的数据
+    },
     //   // 调用不喜欢的文章接口
     //   async dislike () {
     //     try {
@@ -111,8 +134,10 @@ export default {
     //  },
     /** 下面两个相同封装抽提 */
     async dislikeOrReport (params, operateType) {
+      // debugger
       try {
         operateType === 'dislike' ? await disLikeArticle({ target: this.articleId }) : await reportArticle({ target: this.articleId, params })
+
         this.$notice({
           type: 'success',
           message: '操作成功'

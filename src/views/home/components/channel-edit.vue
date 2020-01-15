@@ -19,19 +19,22 @@
               <!-- 通过编辑状态来控制叉号图标的显示和隐藏  频繁切换使用v-show-->
           <!-- <v-if优先级大于v-show -->
         <template v-if="i!==0">
-            <van-icon v-show="editing" class="btn" name="plus"></van-icon>
+            <van-icon v-show="editing" class="btn" name="cross" @click="$emit('delChannel',channel.id)">
+                <!-- 告诉父组件删除哪个频道传出id -->
+            </van-icon>
         </template>
           <!--第二种方法 <van-icon v-if="i!== 0" v-show="editing" class="btn" name="plus"></van-icon> -->
         </van-grid-item>
       </van-grid>
     </div>
 
+<!-- 可选频道 -->
     <div class="channel">
       <div class="tit">可选频道：</div>
       <van-grid class="van-hairline--left">
             <van-grid-item v-for="channel in optionalChannels" :key="channel.id">
           <span class="f12">{{channel.name}}</span>
-          <van-icon class="btn" name="cross"></van-icon>
+          <van-icon class="btn" name="plus" @click="$emit('addChannel',channel)"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>

@@ -45,6 +45,7 @@ export function getAllChannels () {
 // 本地化删除删除频道  封装本地化
 export function delChannel (id) {
   return new Promise(function (resolve, reject) {
+    // debugger//主语句执行F10
     // 首先判断是删除游客频道还是登陆频道
     let key = store.state.user.token ? CACHE_CHANNEL_U : CACHE_CHANNEL_T
     let channels = JSON.parse(localStorage.getItem(key))
@@ -59,5 +60,18 @@ export function delChannel (id) {
     } else {
       reject(new Error('找不到对应频道'))
     }
+  })
+}
+
+// 添加频道
+export function addChannel (channel) {
+  return new Promise(function (resolve, reject) {
+    // 首先进行判断
+    let key = store.state.user.token ? CACHE_CHANNEL_U : CACHE_CHANNEL_T
+    let channels = JSON.parse(localStorage.getItem(key))
+    channels.push(channel) // 频道添加到队尾
+    // 重新写入缓存
+    localStorage.setItem(key, JSON.stringify(channels))
+    resolve() // 释放成功
   })
 }
