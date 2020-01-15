@@ -21,8 +21,8 @@
   <more-action @dislike="dislikeOrReport($event,'dislike')" @report="dislikeOrReport($event,report)"></more-action>
 </van-popup>
 <van-action-sheet title="编辑频道" v-model="showChannelEdit" :round="false">
-  <!-- 给谁传在谁的标签上写属性 -->
-  <channel-edit :channels="channels"></channel-edit>
+  <!-- 给谁传在谁的标签上写属性 父组件监听选择频道事件 -->
+  <channel-edit :channels="channels" @selectChannel="selectChannel" :activeIndex="activeIndex"></channel-edit>
 </van-action-sheet>
 
   </div>
@@ -63,6 +63,14 @@ export default {
     openMoreAction (artId) {
       this.showMoreAction = true
       this.articleId = artId
+    },
+    // 切换到对应频道关闭弹层
+    selectChannel (id) {
+      // findIndex(item => item === 1)
+      let index = this.channels.findIndex(item => item.id === id) // 获取切换频道的索引
+      this.activeIndex = index // 切换对应索引下tab
+      //  关闭弹层
+      this.showChannelEdit = false
     },
 
     //   // 调用不喜欢的文章接口

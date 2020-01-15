@@ -13,23 +13,25 @@
                     size="mini" type="danger"  plain>完成</van-button>
       </div>
       <van-grid class="van-hairline--left">
-        <van-grid-item v-for="channel in optionalChannels" :key="channel.id">
-          <span class="f12">{{channel.name}}</span>
-          <van-icon v-show="editing" class="btn" name="cross"></van-icon>
-        </van-grid-item>
-      </van-grid>
-    </div>
-    <div class="channel">
-      <div class="tit">可选频道：</div>
-      <van-grid class="van-hairline--left">
         <van-grid-item v-for="(channel,i) in channels" :key="channel.id">
-          <span class="f12">{{channel.name}}</span>
-          <!-- 通过编辑状态来控制叉号图标的显示和隐藏  频繁切换使用v-show-->
+            <!-- 告诉父组件点击了哪个 -->
+          <span class="f12" :class="{red: activeIndex === i}" @click="$emit('selectChannel',channel.id)" >{{channel.name}}</span>
+              <!-- 通过编辑状态来控制叉号图标的显示和隐藏  频繁切换使用v-show-->
           <!-- <v-if优先级大于v-show -->
         <template v-if="i!==0">
             <van-icon v-show="editing" class="btn" name="plus"></van-icon>
         </template>
           <!--第二种方法 <van-icon v-if="i!== 0" v-show="editing" class="btn" name="plus"></van-icon> -->
+        </van-grid-item>
+      </van-grid>
+    </div>
+
+    <div class="channel">
+      <div class="tit">可选频道：</div>
+      <van-grid class="van-hairline--left">
+            <van-grid-item v-for="channel in optionalChannels" :key="channel.id">
+          <span class="f12">{{channel.name}}</span>
+          <van-icon class="btn" name="cross"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>
@@ -55,6 +57,9 @@ export default {
       type: Array,
       default: () => []
       // 要求我们必须要用一个函数来声明数组类型  所以永健有函数
+    },
+    activeIndex: {
+      type: Number
     }
   },
   methods: {
