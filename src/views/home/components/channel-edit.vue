@@ -13,8 +13,8 @@
                     size="mini" type="danger"  plain>完成</van-button>
       </div>
       <van-grid class="van-hairline--left">
-        <van-grid-item v-for="index in 8" :key="index">
-          <span class="f12">频道{{index}}</span>
+        <van-grid-item v-for="channel in optionalChannels" :key="channel.id">
+          <span class="f12">{{channel.name}}</span>
           <van-icon v-show="editing" class="btn" name="cross"></van-icon>
         </van-grid-item>
       </van-grid>
@@ -35,13 +35,18 @@
     </div>
   </van-action-sheet>
   </div>
+
+ <!-- 可选频道=全部频道-我的频道 两个数组相减 -->
+ <!-- var a= [1,2,3,4,5] var b = [1,2,3] a.filter(item => !b.some(o =>o===item))    filter返回一个数组 -->
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channels'
 export default {
   data () {
     return {
-      editing: false// 是否正在编辑
+      editing: false, // 是否正在编辑
+      allChannels: [] // 接收所有频道
     }
   },
   props: {
@@ -51,6 +56,21 @@ export default {
       default: () => []
       // 要求我们必须要用一个函数来声明数组类型  所以永健有函数
     }
+  },
+  methods: {
+    async getAllChannels () {
+      const data = await getAllChannels
+      this.allChannels = data.channels
+    }
+  },
+  computed: {
+
+    optionalChannels () {
+      return this.allChannels.filter(item => !this.channels.some(o => o.id === item.id))
+    }
+  },
+  created () {
+    this.getAllChannels()
   }
 }
 </script>
