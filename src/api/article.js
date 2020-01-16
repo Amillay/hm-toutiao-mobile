@@ -42,3 +42,12 @@ export function searchArticle (params) {
     params
   })
 }
+
+// 获取文章详情
+// 埋点：网站用户调研，网站的使用及分析
+export function getArticleInfo (articleId) {
+  return request({
+    url: `/articles/${articleId}`
+
+  })
+}

@@ -4,7 +4,9 @@
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="refreshSuccessText">
       <!-- 放置list组件实现上拉加载   组件距离底部超过一定距离 就自己调用获取数据-->
     <van-list v-model="upLoading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-cell v-for="(article,index) in articles" :key="index">
+        <!-- 点击跳转到文章详情 query传值?id=123 params传值/123动态路由-->
+        <van-cell :to="`/article?articleId=${article.art_id.toString()}`" v-for="article in articles" :key="article.art_id.toString()">
+
           <div class="article_item">
             <h3 class="van-ellipsis">{{article.title}}</h3>
             <!-- 三图模式 -->
@@ -26,8 +28,9 @@
               <span
                 class="close"
                 v-if="user.token"
-                @click="$emit('showAction',article.art_id.toString())"
-              >
+
+                @click.stop="$emit('showAction',article.art_id.toString())"
+              ><!-- 阻止事件冒泡 -->
                 <van-icon name="cross"></van-icon>
               </span>
             </div>

@@ -6,7 +6,7 @@
 
       <van-list w-model="upLoading" :finished="finished" @load="onLoad">
         <van-cell-group>
-          <van-cell v-for="item in articles" :key="item.art_id.toString()">
+          <van-cell v-for="item in articles" :key="item.art_id.toString()" :to="`/articles?articleId=${item.art_id.toString()}`">
             <!-- art_id有可能是大数字 会转成bignumber 要转一下 -->
             <div class="article_item">
               <h3 class="van-ellipsis">{{item.title}}</h3>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { searchArticle } from '@/api/searchArticle'
+import { searchArticle } from '@/api/article'
 export default {
   name: 'searchResult',
   data () {
