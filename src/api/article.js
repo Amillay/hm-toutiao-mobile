@@ -26,3 +26,19 @@ export function reportArticle (data) {
     data
   })
 }
+
+// 联想搜索建议
+export function suggestion (params) {
+  return request({
+    url: '/suggestion',
+    params
+  })
+}
+
+// 获取文章搜索的结果
+export function searchArticle (params) {
+  return request({
+    url: '/search',
+    params
+  })
+}

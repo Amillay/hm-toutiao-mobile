@@ -9,9 +9,9 @@
 
      <!-- 联想搜索 -->
      <van-cell-group class="suggest-box" v-if="q">
-      <van-cell icon="search">
+      <van-cell icon="search" @click="toSearchResult" v-for="item in suggestList" :key="item">
         <p>
-          <span>j</span>ava
+          <span>{{item}}</span>
         </p>
       </van-cell>
     </van-cell-group>
@@ -37,14 +37,47 @@
 </template>
 
 <script>
+import { suggestion } from '@/api/article.js'
 const key = 'hm-91-history' // 历史记录key
 export default {
   name: 'search',
   data () {
     return {
       q: '', // 查询内容
-      historyList: [] // 存放历史记录
+      historyList: [], // 存放历史记录
+      suggestList: [] // 存放联想建议的数组
     }
+  },
+  watch: {
+    // // 防抖搜索  只在最后执行一次
+    // q () {
+    //   // this.timer = null
+    //   clearTimeout(this.timer)
+    //   // console.log('搜索联想词汇')
+    //   this.timer = setTimeout(async () => {
+    //     if (!this.q) {
+    //       this.suggestList = [] /// 搜索关键字为空时存放建议的数组清空
+    //       return false  //直接返回下面不再执行
+    //     }
+    //     let data = await suggestion({ q: this.q }) // 搜索联想数据
+    //     this.suggestList = data.options
+    //   }, 500)
+    // }
+    // 节流搜索  隔一段时间执行一次
+    q () {
+      if (!this.timer) {
+        this.timer = setTimeout(async () => {
+          this.timer = null
+          if (!this.q) {
+            this.suggestList = [] /// 搜索关键字为空时存放建议的数组清空
+            return false // 直接返回下面不再执行
+          }
+          let data = await suggestion({ q: this.q }) // 搜索联想数据
+          this.suggestList = data.options
+        }, 500)
+      }
+    }
+
   },
   created () {
     this.historyList = JSON.parse(localStorage.getItem(key) || '[]')
@@ -74,6 +107,13 @@ export default {
       this.historyList = Array.from(obj) // 转回数组
       localStorage.setItem(key, JSON.stringify(this.historyList))
       this.$router.push({ path: '/search/result', query: { q: this.q } })
+    },
+    toSearchResult (text) {
+      let obj = new Set(this.historyList)
+      obj.add(text)
+      this.historyList = Array.from(obj) // 转回数组
+      localStorage.setItem(key, JSON.stringify(this.historyList))
+      this.$router.push({ path: '/search/result', query: { q: text } })
     }
   }
 }
