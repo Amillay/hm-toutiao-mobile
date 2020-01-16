@@ -22,7 +22,7 @@ export function reportArticle (data) {
   return request({
 
     url: '/article/reports',
-    mythod: 'post',
+    method: 'post',
     data
   })
 }

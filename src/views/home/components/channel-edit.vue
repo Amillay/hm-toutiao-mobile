@@ -1,12 +1,9 @@
 <template>
-  <div>
-      <!-- @closed="editing=false" 关闭屉式菜单  重置编辑状态为不编辑 -->
-<van-action-sheet :value="value" @closed="editing=false"
-                  @input="$emit('input', $event)" title="编辑频道">
+  <div class="channel-edit">
     <div class="channel">
       <div class="tit">
         我的频道：
-        <span class="tip">点击可进入频道</span>
+        <span class="tip" >点击可进入频道</span>
         <van-button v-if="!editing" @click="editing=true"
                     size="mini" type="info" plain>编辑</van-button>
         <van-button v-else @click="editing=false"
@@ -38,7 +35,7 @@
         </van-grid-item>
       </van-grid>
     </div>
-  </van-action-sheet>
+
   </div>
 
  <!-- 可选频道=全部频道-我的频道 两个数组相减 -->
@@ -57,6 +54,7 @@ export default {
   props: {
     //   接受数据
     channels: {
+      required: true,
       type: Array,
       default: () => []
       // 要求我们必须要用一个函数来声明数组类型  所以永健有函数
@@ -67,7 +65,7 @@ export default {
   },
   methods: {
     async getAllChannels () {
-      const data = await getAllChannels
+      const data = await getAllChannels()
       this.allChannels = data.channels
     }
   },
@@ -84,22 +82,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.van-popup--bottom{
-  &.van-popup--round{
-    border-radius: 0;
-  }
-}
-.van-action-sheet {
-  max-height: 100%;
-  height: 100%;
-  .van-action-sheet__header {
-    background: #3296fa;
-    color: #fff;
-    .van-icon-close {
-      color: #fff;
-    }
-  }
-}
+.channel-edit {
 .channel {
   padding: 10px;
   .tit{
@@ -128,5 +111,6 @@ export default {
   .red{
     color: red;
   }
+}
 }
 </style>

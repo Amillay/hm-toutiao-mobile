@@ -27,7 +27,6 @@ export function getMyChannels () {
       // 如果没有数据
       const data = await request({
         url: '/user/channels'
-
       })
       localStorage.setItem(key, JSON.stringify(data.channels))// 将线上数据写到缓存
       resolve(data) // 将线上获取的数据释放下给promise

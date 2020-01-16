@@ -17,7 +17,7 @@
     </van-cell-group>
 
     <!-- 历史记录 只有有历史记录时才显示整个历史记录的盒子 -->
-      <div class="history-box" v-if="historyList.length">
+      <div class="history-box" v-else-if="historyList.length">
       <div class="head">
         <span>历史记录</span>
         <!-- 清空所有历史 -->
@@ -28,7 +28,7 @@
         <van-cell v-for="(item,index) in historyList" :key="item" @click="toResult(item)">
           <a class="word_btn">{{ item }}</a>
           <!-- 删除按钮 事件修饰符  事件名.stop 阻止了事件冒泡-->
-          <van-icon @click="delHistory(index)" class="close_btn" slot="right-icon" name="cross" @click.stop="delHistory(index)"/>
+          <van-icon class="close_btn" slot="right-icon" name="cross" @click.stop="delHistory(index)"/>
         </van-cell>
       </van-cell-group>
     </div>

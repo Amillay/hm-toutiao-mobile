@@ -15,11 +15,12 @@
 
   </van-tab>
 </van-tabs>
-<span class="bar_btn"><van-icon  name="wap-nav" /></span>
+<span class="bar_btn" @click="showChannelEdit=true"><van-icon  name="wap-nav"/></span>
 <!-- 放置弹层 -->
 <van-popup v-model="showMoreAction" :style="{width:'80%'}">
   <more-action @dislike="dislikeOrReport($event,'dislike')" @report="dislikeOrReport($event,'report')"></more-action>
 </van-popup>
+<!-- 频道编辑 -->
 <van-action-sheet title="编辑频道" v-model="showChannelEdit" :round="false" >
 
   <!-- 给谁传在谁的标签上写属性 父组件监听选择频道事件 -->
@@ -36,8 +37,8 @@ import MoreAction from './components/more-action'
 
 import eventBus from '@/utils/eventBus.js'
 
-import { disLikeArticle, reportArticle, delChannel, addChannel } from '@/api/article.js'
-import { getMyChannels } from '@/api/channels'
+import { disLikeArticle, reportArticle } from '@/api/article.js'
+import { getMyChannels, delChannel, addChannel } from '@/api/channels'
 
 export default {
   name: 'home',
@@ -136,7 +137,7 @@ export default {
     async dislikeOrReport (params, operateType) {
       // debugger
       try {
-        operateType === 'dislike' ? await disLikeArticle({ target: this.articleId }) : await reportArticle({ target: this.articleId, params })
+        operateType === 'dislike' ? await disLikeArticle({ target: this.articleId }) : await reportArticle({ target: this.articleId, type: params })
 
         this.$notice({
           type: 'success',
@@ -212,6 +213,18 @@ export default {
     z-index: 1000;
     &::before {
       font-size: 20px;
+    }
+  }
+}
+// 弹窗的样式
+.van-action-sheet {
+  max-height: 100%;
+  height: 100%;
+  .van-action-sheet__header {
+    background: #3296fa;
+    color: #fff;
+    .van-icon-close {
+      color: #fff;
     }
   }
 }
