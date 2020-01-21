@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="comment">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
   <div class="item van-hairline--bottom van-hairline--top" v-for="index in 5"               :key="index">
     <van-image round width="1rem" height="1rem" fit="fill"                                   src="https://img.yzcdn.cn/vant/cat.jpeg" />
