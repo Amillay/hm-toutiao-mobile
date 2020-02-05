@@ -51,3 +51,22 @@ export function getArticleInfo (articleId) {
 
   })
 }
+
+// 获取评论  或者评论回复
+export function getComments (params) {
+  return request({
+    url: '/comments', // 请求地址
+    // query放置params
+    // body参数放在data
+    params
+  })
+}
+// 封装一个评论或者回复评论方法
+
+export function commentOrReply (data) {
+  return request({
+    url: '/comments', // 请求地址
+    method: 'post', // 请求类型不同
+    data
+  })
+}
