@@ -19,13 +19,19 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    // meta是route信息里面一个属性存放数据切换时进行使用
     path: '/',
     name: 'layout',
     component: Layout,
+
     children: [
       {
         path: '/',
-        component: Home
+        component: Home,
+        // meta属性存在二级路由并且path相同情况下，需要写到二级路由下
+        meta: {
+          isAlive: true // 是否缓存组件实例
+        }
       },
       {
         path: '/question',

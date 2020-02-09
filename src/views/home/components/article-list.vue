@@ -1,5 +1,6 @@
 <template>
-  <div class="scroll-wrapper">
+<!-- 设置滚动条为了阅读记忆   文章列表看到一半2去了别的地方  回来时文章还在你看的位置 -->
+  <div ref = "mySroll" class="scroll-wrapper" @scroll="remember">
 
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="refreshSuccessText">
       <!-- 放置list组件实现上拉加载   组件距离底部超过一定距离 就自己调用获取数据-->
@@ -54,7 +55,8 @@ export default {
       finished: false, // 是否完成了全部数据的加载
       articles: [],
       refreshSuccessText: '', // 接受上拉加载数据
-      timestamp: null // 定义一个时间戳   用来告诉服务器我现在要什么时间的数据
+      timestamp: null, // 定义一个时间戳   用来告诉服务器我现在要什么时间的数据
+      scrollTop: 0
     }
   },
   props: {
@@ -71,7 +73,7 @@ export default {
     ...mapState(['user'])
   },
   created () {
-    //   开启监听
+    //   开启监听删除文章事件
     eventBus.$on('delArticle', (articleId, channelId) => {
       if (this.channel_id === channelId) {
         //    这个表示该列表就是当前激活的列表
@@ -85,8 +87,30 @@ export default {
         }
       }
     })
+    // 开启一个新的监听   只要开始一次监听就会进入回调函数
+    eventBus.$on('changeTab', id => {
+      // 判断一个id是否等于该组件props得到的频道id
+      if (id === this.channel_id) {
+        // 如果相等说明找对了 article-list实例  判断自己的组件是否有滚动
+
+        // 为什么这里没有滚动呢  因为切换事件会执行dom更新 dom更新是异步的
+        // 保证在上一次页面渲染更新之后 再次执行代码
+        this.$nextTick(() => {
+          if (this.scrollTop && this.$refs.myScroll) {
+          // 表示该文章列表是否存在滚动
+            this.$refs.myScroll.scrollTop = this.scrollTop
+          }
+        })
+      }
+    })
   },
   methods: {
+    // 当绑定事件只写方法名是第一个参数是event
+    remember (event) {
+      // console.log('滚动距离');
+      // event.target指的是当前触发的事件
+      this.scrollTop = event.target.scrollTop
+    },
     // Array(100)
     // Array.from(Array(100))
     // Array.from(Array(10),(value,index) => index)
@@ -147,6 +171,16 @@ export default {
       } else {
         this.refreshSuccessText = '暂无数据更新'
       }
+    }
+  },
+  // 激活函数，组件已经被包裹后面的组=组件都会被唤醒
+  // 这个并不会一开始就执行，即使启动了组件缓存但是自始至终只会执行一次  active在缓存之后执行
+  activated () {
+    console.log('我被唤醒了')
+    // 唤醒的时候要把记录的位置滚动过去重新设置原来的滚动条
+    console.log(this.scrollTop)
+    if (this.scrollTop && this.refs.myScroll) {
+      this.$refs.myScroll.scrollTop = this.scrollTop
     }
   }
 }

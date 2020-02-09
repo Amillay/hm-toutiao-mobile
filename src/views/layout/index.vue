@@ -4,7 +4,13 @@
     <van-nav-bar v-if="showNavBar" title="黑马头条" right-text="搜索" fixed @click-right="$router.push('/search')"></van-nav-bar>
     <!-- 二级路由 -->
     <!-- :class="{名称：布尔值}" -->
-    <div class="my-wrapper" :class="{noTop:!showNavBar }"><router-view> </router-view></div>
+    <div class="my-wrapper" :class="{noTop:!showNavBar }">
+      <keep-alive>
+        <!-- 二级路由容器   keep-alive进行缓存  二级路由都会保留缓存 -->
+        <router-view> </router-view>
+        </keep-alive>
+
+      </div>
     <!-- 标签栏 开启路由route  :route="true"-->
   <van-tabbar route>
     <!-- router-link  to属性 -->

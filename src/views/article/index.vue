@@ -85,7 +85,7 @@ export default {
 }
 .detail {
   padding: 46px 10px 44px;
-  height: 1000%;
+  // height: 1000%;
   .title {
     font-size: 18px;
     line-height: 2;
@@ -133,9 +133,9 @@ export default {
     /deep/ code{
       white-space: pre-wrap;
     }
-    /deep/ pre{
-      white-space: pre-wrap;
-    }
+    // /deep/ pre{
+    //   white-space: pre-wrap;
+    // }
   }
 }
 </style>

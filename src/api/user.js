@@ -31,3 +31,29 @@ export function getUserInfo () {
     url: '/user'
   })
 }
+
+// 获取用户个人资料信息
+export function getUserProfile () {
+  return request({
+    url: '/user/profile' // 获取用户个人资料的接口地址
+
+  })
+}
+
+// 封装编辑用户头像
+export function updateImg (data) {
+  return request({
+    url: '/user/photo',
+    method: 'patch', // 设置头像的类型
+    data
+  })
+}
+
+// 封装保存用户方法
+export function saveUserInfo (data) {
+  return request({
+    url: '/user/profile', // 编辑资料地址
+    method: 'patch',
+    data
+  })
+}

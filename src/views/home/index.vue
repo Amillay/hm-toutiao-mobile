@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-<van-tabs swipeable v-model="activeIndex">
+<van-tabs swipeable v-model="activeIndex" @change="changeTab">
   <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
     <!-- 这个div设置了滚动条  后面做阅读记忆   阅读记忆：看文章看到一半  滑到中部去了别的页面，回来时文章还在之前停留的位置 -->
     <!-- <div class="scroll-wrapper">
@@ -57,6 +57,11 @@ export default {
     ChannelEdit
   },
   methods: {
+    changeTab () {
+      // 要通知所有的article-list实例告诉他们切换页签，并且把切换的页签传过去
+      // 看看是不是自己所在的页签，是自己的判断是否有滚动，如果有滚定那么滚动至对应的位置
+      eventBus.$emit('changeTab', this.channels[this.activeIndex].id) // 切换tab页触发一个公共事件
+    },
     // 删除频道方法
     async delChannel (id) {
       try {
